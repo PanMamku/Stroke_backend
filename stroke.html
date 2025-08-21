@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เรื่องราวในหนึ่งวันของคุณ | Stroke Awareness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        .scene {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .choice-btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <main id="app-container" class="min-h-screen flex flex-col items-center justify-center p-4">
+
+        <!-- Scene 1: Start Screen -->
+        <section id="scene-start" class="scene w-full max-w-2xl text-center">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h1 class="text-4xl md:text-5xl font-bold text-teal-600 mb-4">เรื่องราวในหนึ่งวันของคุณ</h1>
+                <p class="text-lg text-stone-600 mb-8">เคยสงสัยไหมว่า... การตัดสินใจเล็กๆ ในแต่ละวัน จะพาเราไปเจอกับอะไร? มาลองใช้ชีวิตในหนึ่งวันนี้ไปด้วยกัน</p>
+                <button onclick="showScene('scene-morning')" class="choice-btn bg-teal-500 text-white font-bold py-3 px-10 rounded-full text-xl">
+                    เริ่มต้นเรื่องราว
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 2: Morning Choice -->
+        <section id="scene-morning" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">เช้าวันใหม่!</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณตื่นขึ้นมาพร้อมกับเสียงนาฬิกาปลุก จะทานอะไรเป็นอาหารเช้าดี?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="recordChoice('breakfast', 'healthy'); showScene('scene-morning-symptom');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🥗</span>
+                        <h3 class="font-semibold text-lg">สลัดผักกับไข่ต้ม</h3>
+                        <p class="text-sm text-stone-500">เริ่มต้นวันดีๆ เพื่อสุขภาพ</p>
+                    </button>
+                    <button onclick="recordChoice('breakfast', 'unhealthy'); showScene('scene-morning-symptom');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🥓</span>
+                        <h3 class="font-semibold text-lg">ข้าวเหนียวหมูปิ้ง</h3>
+                        <p class="text-sm text-stone-500">อร่อยง่ายๆ รีบไปทำงาน</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 2.5: Morning Symptom -->
+        <section id="scene-morning-symptom" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <p id="morning-symptom-text" class="text-lg text-stone-600 mb-8"></p>
+                <button onclick="showScene('scene-transport')" class="choice-btn bg-stone-200 text-stone-700 font-bold py-3 px-10 rounded-full text-lg">
+                    ไปต่อ...
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 3: Transport Choice -->
+        <section id="scene-transport" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">ได้เวลาเดินทาง</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณกำลังจะไปที่ไหนสักแห่ง วันนี้จะเดินทางด้วยวิธีไหน?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="showScene('scene-destination')" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🚌</span>
+                        <h3 class="font-semibold text-lg">ขึ้นรถโดยสารประจำทาง</h3>
+                        <p class="text-sm text-stone-500">ชมวิวเมืองระหว่างทาง</p>
+                    </button>
+                    <button onclick="showScene('scene-destination')" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🚗</span>
+                        <h3 class="font-semibold text-lg">ขับรถไปเอง</h3>
+                        <p class="text-sm text-stone-500">สะดวกสบาย เป็นส่วนตัว</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 3.5: Destination Choice -->
+        <section id="scene-destination" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">ถึงที่หมายแล้ว</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณใช้เวลาเดินทางสักพักก็มาถึงจุดหมาย วันนี้จะทำอะไรต่อดี?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="recordChoice('activity', 'relax'); showScene('scene-activity-symptom');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🌳</span>
+                        <h3 class="font-semibold text-lg">เดินเล่นในสวนสาธารณะ</h3>
+                        <p class="text-sm text-stone-500">ผ่อนคลาย รับอากาศบริสุทธิ์</p>
+                    </button>
+                    <button onclick="recordChoice('activity', 'stress'); showScene('scene-activity-symptom');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🛍️</span>
+                        <h3 class="font-semibold text-lg">เดินช้อปปิ้งในห้าง</h3>
+                        <p class="text-sm text-stone-500">หาของอร่อยและของลดราคา</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 3.7: Activity Symptom -->
+        <section id="scene-activity-symptom" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <p id="activity-symptom-text" class="text-lg text-stone-600 mb-8"></p>
+                <button onclick="showScene('scene-incident')" class="choice-btn bg-stone-200 text-stone-700 font-bold py-3 px-10 rounded-full text-lg">
+                    ไปต่อ...
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 4: The Incident -->
+        <section id="scene-incident" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg border-4 border-red-400">
+                <h2 class="text-3xl font-bold text-red-600 mb-2">เหตุการณ์ไม่คาดฝัน!</h2>
+                <p class="text-lg text-stone-600 mb-8">ขณะที่คุณกำลังเพลินๆ... คุณสังเกตเห็นชายคนหนึ่งล้มลงใกล้ๆ! เขาดูสับสน พูดไม่ชัด และใบหน้าข้างหนึ่งดูตกๆ คุณจะทำอย่างไร?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="recordChoice('action', 'call'); showScene('scene-post-incident-choice');" class="choice-btn bg-green-500 text-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">โทร 1669 (สายด่วน)</h3>
+                        <p class="text-sm">แจ้งเหตุฉุกเฉินทันที</p>
+                    </button>
+                    <button onclick="recordChoice('action', 'panic'); showScene('scene-post-incident-choice');" class="choice-btn bg-yellow-500 text-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">ตกใจ ทำอะไรไม่ถูก</h3>
+                        <p class="text-sm">ยืนนิ่งๆ มองดูเหตุการณ์</p>
+                    </button>
+                    <button onclick="recordChoice('action', 'first-aid'); showScene('scene-minigame');" class="choice-btn bg-blue-500 text-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">เข้าไปปฐมพยาบาล</h3>
+                        <p class="text-sm">พยายามช่วยเหลือด้วยตัวเอง</p>
+                    </button>
+                    <button onclick="recordChoice('action', 'record'); showScene('scene-post-incident-choice');" class="choice-btn bg-gray-500 text-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg">หยิบมือถือมาถ่ายคลิป</h3>
+                        <p class="text-sm">บันทึกเหตุการณ์ไว้ก่อน</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 4.5: Mini-game -->
+        <section id="scene-minigame" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">ทดสอบความรู้ F.A.S.T</h2>
+                <p class="text-lg text-stone-600 mb-6">คุณจำสัญญาณเตือนของโรคหลอดเลือดสมองได้ไหม?</p>
+                <div id="minigame-question" class="mb-6">
+                    <p class="text-2xl font-semibold mb-4" id="fast-question">F - Face: อาการของใบหน้าคืออะไร?</p>
+                </div>
+                <div id="minigame-answers" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <button onclick="handleMinigameAnswer(true)" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">ปากเบี้ยว, ใบหน้าเบี้ยวครึ่งซีก</button>
+                     <button onclick="handleMinigameAnswer(false)" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">ปวดศีรษะรุนแรง</button>
+                </div>
+                <p id="minigame-feedback" class="mt-4 font-semibold"></p>
+            </div>
+        </section>
+
+        <!-- Scene 5: Post-Incident Choice -->
+        <section id="scene-post-incident-choice" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">หลังจากเหตุการณ์นั้น...</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณรู้สึกใจหายเล็กน้อยกับสิ่งที่เพิ่งเกิดขึ้น จะทำอะไรต่อดี?</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="recordChoice('postIncidentDecision', 'continue'); showScene('scene-continue-trip-choice');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">➡️</span>
+                        <h3 class="font-semibold text-lg">ใช้ชีวิตต่อ</h3>
+                        <p class="text-sm text-stone-500">พยายามไม่คิดมาก</p>
+                    </button>
+                    <button onclick="recordChoice('postIncidentDecision', 'gohome'); showScene('scene-evening');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">
+                        <span class="text-4xl mb-2">🏠</span>
+                        <h3 class="font-semibold text-lg">กลับบ้านดีกว่า</h3>
+                        <p class="text-sm text-stone-500">วันนี้พอแค่นี้</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 5.1: Continue Trip Choice -->
+        <section id="scene-continue-trip-choice" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">ไปไหนต่อดี?</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณตัดสินใจที่จะไม่ให้เหตุการณ์เมื่อครู่มาทำลายแผนของคุณ</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="recordChoice('continuedActivity', 'eat'); showScene('scene-eat-choice');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">🍔</button>
+                    <button onclick="recordChoice('continuedActivity', 'shop'); showScene('scene-shopping');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">🛍️</button>
+                    <button onclick="recordChoice('continuedActivity', 'friend'); showScene('scene-friend-house');" class="choice-btn bg-white p-6 rounded-lg border-2 border-stone-200">🧑‍🤝‍🧑</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 5.2: Eat Choice -->
+        <section id="scene-eat-choice" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">หาอะไรทานดีกว่า</h2>
+                 <p class="text-lg text-stone-600 mb-8">คุณเริ่มรู้สึกหิวขึ้นมาแล้ว</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="showScene('scene-go-home-choice')" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">🍦 ไอศกรีม</button>
+                    <button onclick="showScene('scene-go-home-choice')" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">🍕 พิซซ่า</button>
+                    <button onclick="showScene('scene-go-home-choice')" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">🍔 เบอร์เกอร์</button>
+                    <button onclick="showScene('scene-go-home-choice')" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200">🍛 อาหารไทย</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scene 5.3: Shopping -->
+        <section id="scene-shopping" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                 <h2 class="text-3xl font-bold mb-2">เดินช้อปปิ้ง</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณเดินดูของไปเรื่อยๆ และซื้อของมานิดหน่อย ตอนนี้ได้เวลากลับแล้ว</p>
+                <button onclick="showScene('scene-go-home-choice')" class="choice-btn bg-stone-200 text-stone-700 font-bold py-3 px-10 rounded-full text-lg">
+                    กลับบ้าน
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 5.4: Friend's House -->
+        <section id="scene-friend-house" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">บ้านเพื่อน</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณมาถึงบ้านเพื่อนและเล่าเรื่องที่เจอมาให้ฟัง ขณะที่กำลังคุยกันอย่างออกรส คุณก็เริ่มรู้สึกว่า... พูดไม่ชัด... และแขนเริ่มชา...</p>
+                <button onclick="showScene('scene-user-stroke')" class="choice-btn bg-red-500 text-white font-bold py-3 px-10 rounded-full text-lg">
+                    ...
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 5.5: Go Home Choice -->
+        <section id="scene-go-home-choice" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">กลับบ้าน</h2>
+                <p class="text-lg text-stone-600 mb-8">หลังจากทานอาหารเสร็จ คุณก็เตรียมตัวกลับบ้าน</p>
+                <button onclick="showScene('scene-user-stroke')" class="choice-btn bg-stone-200 text-stone-700 font-bold py-3 px-10 rounded-full text-lg">
+                    เดินทางกลับ
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 6: Evening -->
+        <section id="scene-evening" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">สิ้นสุดวัน...</h2>
+                <p class="text-lg text-stone-600 mb-8">คุณกลับมาถึงบ้านด้วยความเหนื่อยล้า และทิ้งตัวลงบนโซฟา...</p>
+                <button onclick="showScene('scene-user-stroke')" class="choice-btn bg-slate-800 text-white font-bold py-3 px-10 rounded-full text-lg">
+                    พักผ่อน
+                </button>
+            </div>
+        </section>
+
+        <!-- Scene 7: User's Stroke -->
+        <section id="scene-user-stroke" class="scene w-full max-w-2xl text-center hidden">
+            <div class="bg-black p-8 rounded-2xl shadow-lg">
+                <h2 class="text-4xl font-bold text-white mb-4 animate-pulse">ทันใดนั้น...</h2>
+                <p class="text-xl text-stone-300" style="filter: blur(1px);">คุณรู้สึกปวดหัวอย่างรุนแรง... แขนขาอ่อนแรง... ภาพตรงหน้าเริ่มพร่ามัว...</p>
+            </div>
+        </section>
+
+        <!-- Scene 8: The Result -->
+        <section id="scene-result" class="scene w-full max-w-3xl text-center hidden">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold mb-2">ณ โรงพยาบาล...</h2>
+                <p class="text-lg text-stone-600 mb-6">คุณลืมตาขึ้นมา พบว่าตัวเองอยู่ที่โรงพยาบาล คุณหมอเดินเข้ามาพร้อมกับผลการวินิจฉัย</p>
+                <div class="md:flex md:items-center md:gap-8">
+                    <div class="md:w-1/2">
+                        <h3 class="text-xl font-bold text-teal-700">ผลการวินิจฉัย: โรคหลอดเลือดสมอง</h3>
+                        <p id="result-text" class="text-left my-4 text-stone-700"></p>
+                        <div id="warning-symptom-text" class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-4"></div>
+                        <div id="correct-action-text" class="bg-green-100 text-green-800 p-4 rounded-lg"></div>
+                    </div>
+                    <div class="md:w-1/2 mt-6 md:mt-0">
+                        <div class="chart-container">
+                            <canvas id="strokeChart"></canvas>
+                        </div>
+                         <p class="text-sm text-stone-500 mt-2">สัดส่วนประเภทของโรคหลอดเลือดสมองโดยทั่วไป</p>
+                    </div>
+                </div>
+                <button onclick="window.location.reload()" class="choice-btn mt-8 bg-teal-500 text-white font-bold py-3 px-10 rounded-full text-lg">
+                    ลองอีกครั้ง
+                </button>
+                <div class="mt-8 border-t pt-6 text-sm text-stone-500">
+                    <h4 class="font-bold text-base text-stone-700 mb-2">จัดทำโดย</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 mb-6 text-left">
+                        <div><span class="font-semibold">Head helper:</span><br>สิรีธัญ สุรวัฒนาประเสริฐ (ไก่)</div>
+                        <div><span class="font-semibold">Head:</span><br>วิรากร วงศ์จงใจหาญ (ยูริ)</div>
+                        <div><span class="font-semibold">Graphic:</span><br>กสิกร ลภัสรดา<br>ชยพล กลัมพสุต (อามมี่)</div>
+                        <div><span class="font-semibold">คณะที่ปรึกษา:</span><br>กฤติยา ใจมั่น (วิว)</div>
+                        <div><span class="font-semibold">Openlab dev:</span><br>(มิส)</div>
+                        <div><span class="font-semibold">webpage dev:</span><br>ภาณุรุจ สุคนธ์พันธุ์ (ปั้น)</div>
+                    </div>
+                    <h4 class="font-bold text-base text-stone-700 mb-2">แหล่งข้อมูลและข้อมูลเพิ่มเติม</h4>
+                    <div class="flex justify-center gap-4">
+                        <a href="https://www.sirirajstrokecenter.org/" target="_blank" class="hover:text-teal-600 underline">Siriraj Stroke Center</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const gameState = {
+            breakfast: null,
+            activity: null,
+            action: null,
+            postIncidentDecision: null,
+            continuedActivity: null,
+        };
+
+        let currentScene = 'scene-start';
+
+        const minigameData = [
+            { q: 'F - Face: อาการของใบหน้าคืออะไร?', a: ['ปากเบี้ยว, ใบหน้าเบี้ยวครึ่งซีก', 'ปวดศีรษะรุนแรง'], correctIndex: 0 },
+            { q: 'A - Arm: อาการของแขนคืออะไร?', a: ['แขนขาอ่อนแรงครึ่งซีก', 'เจ็บหน้าอก'], correctIndex: 0 },
+            { q: 'S - Speech: อาการของการพูดคืออะไร?', a: ['พูดไม่ชัด, พูดไม่ออก, ไม่เข้าใจคำพูด', 'ไอเรื้อรัง'], correctIndex: 0 },
+            { q: 'T - Time: เมื่อเจออาการเหล่านี้ ควรทำอย่างไร?', a: ['รีบโทร 1669 ให้เร็วที่สุด', 'รอดูอาการก่อน'], correctIndex: 0 },
+        ];
+        let minigameStep = 0;
+
+        function showScene(sceneId) {
+            if (sceneId === 'scene-morning-symptom') {
+                const textEl = document.getElementById('morning-symptom-text');
+                textEl.textContent = gameState.breakfast === 'unhealthy' 
+                    ? 'หลังจากทานเสร็จ คุณรู้สึกมึนหัวเล็กน้อย แต่ก็คิดว่าคงเพราะรีบทานเกินไป...' 
+                    : 'คุณรู้สึกสดชื่นและพร้อมสำหรับวันใหม่!';
+            }
+
+            if (sceneId === 'scene-activity-symptom') {
+                const textEl = document.getElementById('activity-symptom-text');
+                textEl.textContent = gameState.activity === 'stress'
+                    ? 'ระหว่างเดิน คุณรู้สึกว่าตาพร่าไปแวบหนึ่ง แต่ก็ไม่ได้เอะใจอะไร...'
+                    : 'อากาศบริสุทธิ์ทำให้คุณรู้สึกผ่อนคลายและปลอดโปร่ง';
+            }
+
+            const currentEl = document.getElementById(currentScene);
+            const nextEl = document.getElementById(sceneId);
+
+            if (currentEl) {
+                currentEl.classList.add('hidden');
+                currentEl.classList.add('opacity-0');
+            }
+            if (nextEl) {
+                nextEl.classList.remove('hidden');
+                setTimeout(() => nextEl.classList.remove('opacity-0'), 50);
+                currentScene = sceneId;
+            }
+
+            if (sceneId === 'scene-user-stroke') {
+                setTimeout(() => showScene('scene-result'), 4000);
+            }
+
+            if (sceneId === 'scene-result') {
+                renderResult();
+            }
+        }
+
+        function recordChoice(key, value) {
+            gameState[key] = value;
+        }
+
+        function setupMinigame() {
+            const questionEl = document.getElementById('fast-question');
+            const answersContainer = document.getElementById('minigame-answers');
+            const feedbackEl = document.getElementById('minigame-feedback');
+
+            feedbackEl.textContent = '';
+
+            if (minigameStep >= minigameData.length) {
+                showScene('scene-post-incident-choice');
+                return;
+            }
+
+            const currentQuestion = minigameData[minigameStep];
+            questionEl.textContent = currentQuestion.q;
+
+            answersContainer.innerHTML = '';
+            currentQuestion.a.forEach((answer, index) => {
+                const isCorrect = index === currentQuestion.correctIndex;
+                const button = document.createElement('button');
+                button.className = 'choice-btn bg-white p-4 rounded-lg border-2 border-stone-200';
+                button.textContent = answer;
+                button.onclick = () => handleMinigameAnswer(isCorrect);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        function handleMinigameAnswer(isCorrect) {
+            const feedbackEl = document.getElementById('minigame-feedback');
+            if(isCorrect) {
+                feedbackEl.textContent = 'ถูกต้อง!';
+                feedbackEl.className = 'mt-4 font-semibold text-green-600';
+                minigameStep++;
+                setTimeout(setupMinigame, 1000);
+            } else {
+                feedbackEl.textContent = 'ลองอีกครั้ง! สัญญาณเตือนเป็นสิ่งสำคัญ';
+                feedbackEl.className = 'mt-4 font-semibold text-red-600';
+            }
+        }
+
+        function renderResult() {
+            const resultTextEl = document.getElementById('result-text');
+            const warningTextEl = document.getElementById('warning-symptom-text');
+            const actionTextEl = document.getElementById('correct-action-text');
+            let resultHTML = 'คุณหมออธิบายว่าโรคหลอดเลือดสมอง (Stroke) เกิดจากหลอดเลือดที่ไปเลี้ยงสมองตีบ ตัน หรือแตก ทำให้สมองขาดเลือดและออกซิเจน ';
+
+            if (gameState.breakfast === 'unhealthy') {
+                resultHTML += 'การรับประทานอาหารที่มีไขมันสูงเป็นประจำ เป็นหนึ่งในปัจจัยเสี่ยงที่สำคัญ ';
+            } else {
+                resultHTML += 'การเลือกรับประทานอาหารที่ดีต่อสุขภาพช่วยลดความเสี่ยงได้มาก ';
+            }
+
+            if (gameState.activity === 'stress') {
+                resultHTML += 'นอกจากนี้ ภาวะเครียดและการพักผ่อนไม่เพียงพอก็เป็นอีกปัจจัยที่เพิ่มความเสี่ยงได้ ';
+            } else {
+                resultHTML += 'การหากิจกรรมที่ช่วยผ่อนคลายความเครียดก็เป็นการดูแลสุขภาพที่ดีเช่นกัน ';
+            }
+
+            resultHTML += 'โชคดีที่คุณมาถึงโรงพยาบาลได้ทันเวลา';
+            resultTextEl.innerHTML = resultHTML;
+
+            warningTextEl.innerHTML = '<strong>สัญญาณเตือน:</strong> คุณหมอบอกว่าอาการเล็กๆ น้อยๆ ที่คุณเจอระหว่างวัน อาจเป็นสัญญาณเตือนล่วงหน้า (TIA) ซึ่งไม่ควรละเลย';
+
+            let actionHTML = '';
+            if (gameState.continuedActivity === 'friend') {
+                 actionHTML = '<strong>เพื่อนของคุณสุดยอดมาก!</strong> การอยู่กับคนอื่นที่สังเกตเห็นอาการและรีบพามาโรงพยาบาล คือการตัดสินใจที่ช่วยชีวิตคุณไว้ได้';
+            } else {
+                switch (gameState.action) {
+                    case 'call':
+                        actionHTML = '<strong>คุณทำสิ่งที่ถูกต้องที่สุด!</strong> การโทร 1669 ทันทีเมื่อพบผู้มีอาการ คือการช่วยชีวิตที่ดีที่สุด เพราะ "Time is Brain" ทุกนาทีมีค่า';
+                        break;
+                    case 'panic':
+                        actionHTML = '<strong>การตั้งสติเป็นสิ่งสำคัญ</strong> ในสถานการณ์ฉุกเฉิน แม้จะน่าตกใจ แต่การโทร 1669 คือสิ่งแรกที่ควรทำเสมอ';
+                        break;
+                    case 'first-aid':
+                         actionHTML = '<strong>การจดจำสัญญาณเตือนได้เป็นเรื่องดีมาก!</strong> และสิ่งที่ดีที่สุดคือการโทร 1669 เพื่อให้ผู้ป่วยได้รับการดูแลจากผู้เชี่ยวชาญโดยเร็วที่สุด';
+                        break;
+                    case 'record':
+                        actionHTML = '<strong>ในภาวะฉุกเฉิน การช่วยเหลือสำคัญที่สุด</strong> การโทร 1669 ก่อนสิ่งอื่นใด คือการช่วยชีวิตผู้ป่วยได้ดีที่สุด';
+                        break;
+                }
+            }
+            actionTextEl.innerHTML = actionHTML;
+
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('strokeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['หลอดเลือดสมองตีบหรืออุดตัน (Ischemic)', 'หลอดเลือดสมองแตก (Hemorrhagic)'],
+                    datasets: [{
+                        label: 'ประเภทของ Stroke',
+                        data: [87, 13],
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.7)', // teal
+                            'rgba(244, 63, 94, 0.7)'  // rose
+                        ],
+                        borderColor: [
+                            'rgb(15, 118, 110)',
+                            'rgb(190, 18, 60)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showScene('scene-start');
+            setupMinigame(); // Initial setup for the minigame scene
+        });
+
+    </script>
+</body>
+</html>
