@@ -1,0 +1,218 @@
+left">
+                        <div><span class="font-semibold">Head helper:</span><br>สิรีธัญ สุรวัฒนาประเสริฐ (ไก่)</div>
+                        <div><span class="font-semibold">Head:</span><br>วิรากร วงศ์จงใจหาญ (ยูริ)</div>
+                        <div><span class="font-semibold">Graphic:</span><br>กสิกร ลภัสรดา<br>ชยพล กลัมพสุต (อามมี่)</div>
+                        <div><span class="font-semibold">คณะที่ปรึกษา:</span><br>กฤติยา ใจมั่น (วิว)</div>
+                        <div><span class="font-semibold">Openlab dev:</span><br>(มิส)</div>
+                        <div><span class="font-semibold">webpage dev:</span><br>ภาณุรุจ สุคนธ์พันธุ์ (ปั้น)</div>
+                    </div>
+                    <h4 class="font-bold text-base text-stone-700 mb-2">แหล่งข้อมูลและข้อมูลเพิ่มเติม</h4>
+                    <div class="flex justify-center gap-4">
+                        <a href="https://www.sirirajstrokecenter.org/" target="_blank" class="hover:text-teal-600 underline">Siriraj Stroke Center</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const gameState = {
+            breakfast: null,
+            activity: null,
+            action: null,
+            postIncidentDecision: null,
+            continuedActivity: null,
+        };
+
+        let currentScene = 'scene-start';
+
+        const minigameData = [
+            { q: 'F - Face: อาการของใบหน้าคืออะไร?', a: ['ปากเบี้ยว, ใบหน้าเบี้ยวครึ่งซีก', 'ปวดศีรษะรุนแรง'], correctIndex: 0 },
+            { q: 'A - Arm: อาการของแขนคืออะไร?', a: ['แขนขาอ่อนแรงครึ่งซีก', 'เจ็บหน้าอก'], correctIndex: 0 },
+            { q: 'S - Speech: อาการของการพูดคืออะไร?', a: ['พูดไม่ชัด, พูดไม่ออก, ไม่เข้าใจคำพูด', 'ไอเรื้อรัง'], correctIndex: 0 },
+            { q: 'T - Time: เมื่อเจออาการเหล่านี้ ควรทำอย่างไร?', a: ['รีบโทร 1669 ให้เร็วที่สุด', 'รอดูอาการก่อน'], correctIndex: 0 },
+        ];
+        let minigameStep = 0;
+
+        function showScene(sceneId) {
+            if (sceneId === 'scene-morning-symptom') {
+                const textEl = document.getElementById('morning-symptom-text');
+                textEl.textContent = gameState.breakfast === 'unhealthy' 
+                    ? 'หลังจากทานเสร็จ คุณรู้สึกมึนหัวเล็กน้อย แต่ก็คิดว่าคงเพราะรีบทานเกินไป...' 
+                    : 'คุณรู้สึกสดชื่นและพร้อมสำหรับวันใหม่!';
+            }
+
+            if (sceneId === 'scene-activity-symptom') {
+                const textEl = document.getElementById('activity-symptom-text');
+                textEl.textContent = gameState.activity === 'stress'
+                    ? 'ระหว่างเดิน คุณรู้สึกว่าตาพร่าไปแวบหนึ่ง แต่ก็ไม่ได้เอะใจอะไร...'
+                    : 'อากาศบริสุทธิ์ทำให้คุณรู้สึกผ่อนคลายและปลอดโปร่ง';
+            }
+
+            const currentEl = document.getElementById(currentScene);
+            const nextEl = document.getElementById(sceneId);
+
+            if (currentEl) {
+                currentEl.classList.add('hidden');
+                currentEl.classList.add('opacity-0');
+            }
+            if (nextEl) {
+                nextEl.classList.remove('hidden');
+                setTimeout(() => nextEl.classList.remove('opacity-0'), 50);
+                currentScene = sceneId;
+            }
+
+            if (sceneId === 'scene-user-stroke') {
+                setTimeout(() => showScene('scene-result'), 4000);
+            }
+
+            if (sceneId === 'scene-result') {
+                renderResult();
+            }
+        }
+
+        function recordChoice(key, value) {
+            gameState[key] = value;
+        }
+
+        function setupMinigame() {
+            const questionEl = document.getElementById('fast-question');
+            const answersContainer = document.getElementById('minigame-answers');
+            const feedbackEl = document.getElementById('minigame-feedback');
+
+            feedbackEl.textContent = '';
+
+            if (minigameStep >= minigameData.length) {
+                showScene('scene-post-incident-choice');
+                return;
+            }
+
+            const currentQuestion = minigameData[minigameStep];
+            questionEl.textContent = currentQuestion.q;
+
+            answersContainer.innerHTML = '';
+            currentQuestion.a.forEach((answer, index) => {
+                const isCorrect = index === currentQuestion.correctIndex;
+                const button = document.createElement('button');
+                button.className = 'choice-btn bg-white p-4 rounded-lg border-2 border-stone-200';
+                button.textContent = answer;
+                button.onclick = () => handleMinigameAnswer(isCorrect);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        function handleMinigameAnswer(isCorrect) {
+            const feedbackEl = document.getElementById('minigame-feedback');
+            if(isCorrect) {
+                feedbackEl.textContent = 'ถูกต้อง!';
+                feedbackEl.className = 'mt-4 font-semibold text-green-600';
+                minigameStep++;
+                setTimeout(setupMinigame, 1000);
+            } else {
+                feedbackEl.textContent = 'ลองอีกครั้ง! สัญญาณเตือนเป็นสิ่งสำคัญ';
+                feedbackEl.className = 'mt-4 font-semibold text-red-600';
+            }
+        }
+
+        function renderResult() {
+            const resultTextEl = document.getElementById('result-text');
+            const warningTextEl = document.getElementById('warning-symptom-text');
+            const actionTextEl = document.getElementById('correct-action-text');
+            let resultHTML = 'คุณหมออธิบายว่าโรคหลอดเลือดสมอง (Stroke) เกิดจากหลอดเลือดที่ไปเลี้ยงสมองตีบ ตัน หรือแตก ทำให้สมองขาดเลือดและออกซิเจน ';
+
+            if (gameState.breakfast === 'unhealthy') {
+                resultHTML += 'การรับประทานอาหารที่มีไขมันสูงเป็นประจำ เป็นหนึ่งในปัจจัยเสี่ยงที่สำคัญ ';
+            } else {
+                resultHTML += 'การเลือกรับประทานอาหารที่ดีต่อสุขภาพช่วยลดความเสี่ยงได้มาก ';
+            }
+
+            if (gameState.activity === 'stress') {
+                resultHTML += 'นอกจากนี้ ภาวะเครียดและการพักผ่อนไม่เพียงพอก็เป็นอีกปัจจัยที่เพิ่มความเสี่ยงได้ ';
+            } else {
+                resultHTML += 'การหากิจกรรมที่ช่วยผ่อนคลายความเครียดก็เป็นการดูแลสุขภาพที่ดีเช่นกัน ';
+            }
+
+            resultHTML += 'โชคดีที่คุณมาถึงโรงพยาบาลได้ทันเวลา';
+            resultTextEl.innerHTML = resultHTML;
+
+            warningTextEl.innerHTML = '<strong>สัญญาณเตือน:</strong> คุณหมอบอกว่าอาการเล็กๆ น้อยๆ ที่คุณเจอระหว่างวัน อาจเป็นสัญญาณเตือนล่วงหน้า (TIA) ซึ่งไม่ควรละเลย';
+
+            let actionHTML = '';
+            if (gameState.continuedActivity === 'friend') {
+                 actionHTML = '<strong>เพื่อนของคุณสุดยอดมาก!</strong> การอยู่กับคนอื่นที่สังเกตเห็นอาการและรีบพามาโรงพยาบาล คือการตัดสินใจที่ช่วยชีวิตคุณไว้ได้';
+            } else {
+                switch (gameState.action) {
+                    case 'call':
+                        actionHTML = '<strong>คุณทำสิ่งที่ถูกต้องที่สุด!</strong> การโทร 1669 ทันทีเมื่อพบผู้มีอาการ คือการช่วยชีวิตที่ดีที่สุด เพราะ "Time is Brain" ทุกนาทีมีค่า';
+                        break;
+                    case 'panic':
+                        actionHTML = '<strong>การตั้งสติเป็นสิ่งสำคัญ</strong> ในสถานการณ์ฉุกเฉิน แม้จะน่าตกใจ แต่การโทร 1669 คือสิ่งแรกที่ควรทำเสมอ';
+                        break;
+                    case 'first-aid':
+                         actionHTML = '<strong>การจดจำสัญญาณเตือนได้เป็นเรื่องดีมาก!</strong> และสิ่งที่ดีที่สุดคือการโทร 1669 เพื่อให้ผู้ป่วยได้รับการดูแลจากผู้เชี่ยวชาญโดยเร็วที่สุด';
+                        break;
+                    case 'record':
+                        actionHTML = '<strong>ในภาวะฉุกเฉิน การช่วยเหลือสำคัญที่สุด</strong> การโทร 1669 ก่อนสิ่งอื่นใด คือการช่วยชีวิตผู้ป่วยได้ดีที่สุด';
+                        break;
+                }
+            }
+            actionTextEl.innerHTML = actionHTML;
+
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('strokeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['หลอดเลือดสมองตีบหรืออุดตัน (Ischemic)', 'หลอดเลือดสมองแตก (Hemorrhagic)'],
+                    datasets: [{
+                        label: 'ประเภทของ Stroke',
+                        data: [87, 13],
+                        backgroundColor: [
+                            'rgba(20, 184, 166, 0.7)', // teal
+                            'rgba(244, 63, 94, 0.7)'  // rose
+                        ],
+                        borderColor: [
+                            'rgb(15, 118, 110)',
+                            'rgb(190, 18, 60)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showScene('scene-start');
+            setupMinigame(); // Initial setup for the minigame scene
+        });
+
+    </script>
+</body>
+</html>
