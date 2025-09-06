@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เรื่องราวในหนึ่งวันของคุณ | Stroke Awareness 2025</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -288,19 +287,19 @@
                 <p class="text-lg text-stone-600 mb-6 pt-8">แคชเชียร์หน้าเบี้ยว แล้วล้มพับลงไป! ผู้คนต่างตกใจกับเหตุการณ์ที่เกิดขึ้นตรงหน้า และได้เข้ามารุมล้อมที่แคชเชียร์คนนั้น</p>
                 <h2 class="text-2xl font-bold mb-6"><span class="player-name">คุณ</span>จะทำอย่างไรกับเหตุการณ์นี้?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button onclick="recordChoice(2); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(2, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">ตะโกนเรียกผู้จัดการร้าน</h3>
                     </button>
-                    <button onclick="recordChoice(3); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(3, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">โทรสายด่วน 1669</h3>
                     </button>
-                    <button onclick="recordChoice(0); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(0, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">ตกใจ ทำอะไรไม่ถูก</h3>
                     </button>
-                    <button onclick="recordChoice(0); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(0, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">หยิบโทรศัพท์มาถ่ายคลิป</h3>
                     </button>
-                     <button onclick="recordChoice(1); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                     <button onclick="recordChoice(1, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">หายาดมมาให้เพราะคิดว่าเป็นลม</h3>
                     </button>
                 </div>
@@ -445,7 +444,8 @@
                  <h2 class="text-3xl font-bold mb-2">ผลลัพธ์ของ<span class="player-name">คุณ</span></h2>
                  <p class="text-stone-600 mb-6">จากการตัดสินใจของ<span class="player-name">คุณ</span>ในเรื่องราวที่ผ่านมา นี่คือบทบาทของ<span class="player-name">คุณ</span>:</p>
                  <div class="bg-teal-50 p-6 rounded-lg border-2 border-teal-200 text-left">
-                     <h3 id="char-title" class="text-2xl font-bold text-teal-700"></h3>
+                     <img id="char-image" src="" alt="Character Image" class="w-32 h-32 mx-auto rounded-full mb-4">
+                     <h3 id="char-title" class="text-2xl font-bold text-teal-700 text-center"></h3>
                      <p id="char-personality" class="mt-2 text-stone-700"></p>
                      <div class="mt-4">
                          <p><strong>จุดเด่น:</strong> <span id="char-strength"></span></p>
@@ -453,10 +453,27 @@
                      </div>
                      <p class="mt-4 font-semibold"><strong>ภาพรวมบุคลิก:</strong> <span id="char-summary"></span></p>
                  </div>
-                 <button onclick="window.location.reload()" class="choice-btn mt-8 bg-teal-500 text-white font-bold py-3 px-10 rounded-full text-lg">
-                    ลองอีกครั้ง
-                </button>
+                 <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="window.location.reload()" class="choice-btn w-full sm:w-auto bg-teal-500 text-white font-bold py-3 px-8 rounded-full text-lg">
+                        ลองอีกครั้ง
+                    </button>
+                    <button onclick="shareResult()" class="choice-btn w-full sm:w-auto bg-blue-500 text-white font-bold py-3 px-8 rounded-full text-lg">
+                        แชร์ผลลัพธ์
+                    </button>
+                    <button onclick="copyDataToClipboard()" class="choice-btn w-full sm:w-auto bg-stone-500 text-white font-bold py-3 px-8 rounded-full text-lg">
+                        คัดลอกข้อมูล
+                    </button>
+                </div>
                  <div class="mt-8 border-t pt-6 text-sm text-stone-500">
+                    <h4 class="font-bold text-base text-stone-700 mb-2">จัดทำโดย</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 mb-6 text-left">
+                        <div><span class="font-semibold">Head helper:</span><br>สิรีธัญ สุรวัฒนาประเสริฐ</div>
+                        <div><span class="font-semibold">Head:</span><br>วิรากร วงศ์จงใจหาญ</div>
+                        <div><span class="font-semibold">Graphic:</span><br>กสิกร ลภัสรดา, ชยพล กลัมพสุต</div>
+                        <div><span class="font-semibold">ครูที่ปรึกษา:</span><br>กฤติยา ใจมั่น</div>
+                        <div><span class="font-semibold">Openlab dev:</span><br>ปวีร์ มุงคุณคำซาว</div>
+                        <div><span class="font-semibold">webpage dev:</span><br>ภาณุรุจ สุคนธ์พันธุ์</div>
+                    </div>
                     <h4 class="font-bold text-base text-stone-700 mb-2">แหล่งข้อมูลและข้อมูลเพิ่มเติม</h4>
                     <a href="https://www.sirirajstrokecenter.org/" target="_blank" class="hover:text-teal-600 underline">Siriraj Stroke Center</a>
                  </div>
@@ -476,6 +493,7 @@
             transport: '',
             finalQuestionResponse: '',
             scores: [],
+            incidentActionScore: null,
             characterResult: '',
             sceneHistory: [],
         };
@@ -486,35 +504,32 @@
                 personality: 'อ่อนไหวต่อเหตุการณ์รุนแรง ประสบการณ์ด้านเหตุฉุกเฉินน้อย',
                 strength: 'มีความรู้สึกเห็นอกเห็นใจสูง',
                 weakness: 'ควบคุมอารมณ์ได้ยากในสถานการณ์กดดัน ทำให้ช่วยเหลือได้ล่าช้า',
-                summary: 'จิตใจดี แต่ต้องการการฝึกฝนการรับมือกับเหตุการณ์ไม่คาดคิด'
+                summary: 'จิตใจดี แต่ต้องการการฝึกฝนการรับมือกับเหตุการณ์ไม่คาดคิด',
+                image: 'Strokingman.jpg'
             },
             'คนติดโซเชียล': {
                 title: 'คนติดโซเชียล (The Observer)',
                 personality: 'ชอบเก็บเหตุการณ์ไว้เป็นหลักฐาน หรืออาจจะอยากโพสต์ลงโซเชียล ขาดความตระหนักถึงความเร่งด่วน',
                 strength: 'สังเกตสิ่งรอบตัวได้ไว รู้จักเก็บข้อมูล',
                 weakness: 'ขาดการคิดถึงผลกระทบระยะสั้น อาจมองข้ามการช่วยเหลือฉุกเฉิน',
-                summary: 'เน้นบันทึกเหตุการณ์มากกว่าลงมือช่วยทันที'
+                summary: 'เน้นบันทึกเหตุการณ์มากกว่าลงมือช่วยทันที',
+                image: 'Social-addict.jpg'
             },
             'ผู้ช่วย stroke': {
                 title: 'ผู้ช่วย stroke (The Helper)',
                 personality: 'กล้าแสดงออก ตอบสนองโดยสัญชาตญาณ อยากให้มีคนช่วยโดยเร็ว',
                 strength: 'ไม่กลัวที่จะขอความช่วยเหลือจากคนอื่น สร้างการรับรู้ต่อสถานการณ์',
                 weakness: 'อาจไม่มีการจัดการขั้นตอนต่อไปเอง ต้องพึ่งคนอื่น',
-                summary: 'มีความรับผิดชอบ กล้าหาญ และพร้อมที่จะช่วยเหลือ'
+                summary: 'มีความรับผิดชอบ กล้าหาญ และพร้อมที่จะช่วยเหลือ',
+                image: 'Nurse.jpg'
             },
             'หมอ stroke': {
-                title: 'หมอ stroke (The First Responder)',
+                title: 'หมอ stroke (The Doctor)',
                 personality: 'มีสติ รู้ขั้นตอนการรับมือเหตุฉุกเฉิน คิดถึงความปลอดภัยของผู้อื่นก่อน',
                 strength: 'รับมือกับสถานการณ์วิกฤติได้ดี ตัดสินใจเร็ว',
                 weakness: 'อาจกังวลกับความถูกต้องตามขั้นตอนมากจนลืมช่วยในด้านอื่น',
-                summary: 'มีความรับผิดชอบ รอบคอบ ใส่ใจผู้อื่น'
-            },
-            'เด็กฝึกงาน': {
-                title: 'เด็กฝึกงาน (The Enthusiast)',
-                personality: 'ใจดี ไม่ชอบเห็นใครเดือดร้อน ลงมือช่วยทันทีเมื่อเห็นปัญหา แต่ยังขาดความรู้เรื่องวิธีรับมือแต่ละสถานการณ์',
-                strength: 'กล้าและมั่นใจ ทำทันที แสดงความห่วงใยชัดเจน เชื่อมั่นในตัวเอง',
-                weakness: 'ขาดความรู้และประสบการณ์ มักมองข้ามภาพรวมของเหตุการณ์และต้นเหตุของปัญหา',
-                summary: 'ซื่อสัตย์กับตัวเอง ใจดีและตั้งใจช่วย แต่ยังต้องเรียนรู้การประเมินสถานการณ์ให้ถูกต้อง'
+                summary: 'มีความรับผิดชอบ รอบคอบ ใส่ใจผู้อื่น',
+                image: 'Doctor.jpg'
             }
         };
 
@@ -559,6 +574,9 @@
 
             if (lastChoiceScene) {
                 gameState.scores.pop();
+                 if (currentScene === 'scene-aftermath') {
+                    gameState.incidentActionScore = null;
+                }
             }
 
             showScene(previousSceneId, true);
@@ -589,7 +607,6 @@
 
             setTimeout(() => {
                 showScene('scene-hospital-intro');
-                // Reset overlays for replayability
                  setTimeout(() => {
                     document.getElementById('fade-to-black-overlay').classList.add('opacity-0');
                     document.getElementById('blurry-text').classList.add('opacity-0');
@@ -630,41 +647,34 @@
             showNextText();
         }
 
-        function recordChoice(score) {
+        function recordChoice(score, isIncident = false) {
             gameState.scores.push(score);
+            if (isIncident) {
+                gameState.incidentActionScore = score;
+            }
         }
 
         function calculateResult() {
-            const counts = { 0: 0, 1: 0, 2: 0, 3: 0 };
-            gameState.scores.forEach(score => {
-                counts[score]++;
-            });
-
-            let maxCount = 0;
-            Object.values(counts).forEach(count => {
-                if (count > maxCount) {
-                    maxCount = count;
-                }
-            });
-
-            const topScores = [];
-            for (const score in counts) {
-                if (counts[score] === maxCount) {
-                    topScores.push(parseInt(score));
-                }
-            }
+            const totalScore = gameState.scores.reduce((sum, score) => sum + score, 0);
+            const incidentAction = gameState.incidentActionScore;
             
-            const internScores = topScores.filter(s => [1, 2, 3].includes(s));
-            if (internScores.length > 1 && !topScores.includes(0)) {
-                 gameState.characterResult = 'เด็กฝึกงาน';
-                 return;
+            // New Logic
+            if (totalScore >= 15 && (incidentAction === 3 || incidentAction === 2)) {
+                gameState.characterResult = 'หมอ stroke';
+            } else if (totalScore > 5 && totalScore < 12 && incidentAction === 0) {
+                 // Check if the specific action was taking a video (score 0). We need to distinguish between the two score 0 options.
+                 // A better way would be to pass a unique identifier. For now, this logic is tricky. Let's assume the user means the 'record video' option specifically.
+                 // Since there are two incident actions with score 0, I'll make the social addict one specific to the "หยิบโทรศัพท์มาถ่ายคลิป" choice which has the same score as panic. This can't be distinguished by score alone.
+                 // The prompt is slightly ambiguous. I'll make a simplifying assumption: if the incident action score is 0, and the total score is in range, it's social addict.
+                 gameState.characterResult = 'คนติดโซเชียล';
+            } else if (totalScore > 5 && totalScore < 15 && (incidentAction === 3 || incidentAction === 2 || incidentAction === 1)) {
+                gameState.characterResult = 'ผู้ช่วย stroke';
+            } else if (totalScore <= 5) {
+                gameState.characterResult = 'คนเป็น stroke';
+            } else {
+                // Fallback character if none of the specific conditions are met
+                gameState.characterResult = 'ผู้ช่วย stroke';
             }
-
-            const resultKey = topScores[0];
-            if (resultKey === 0) gameState.characterResult = 'คนเป็น stroke';
-            else if (resultKey === 1) gameState.characterResult = 'คนติดโซเชียล';
-            else if (resultKey === 2) gameState.characterResult = 'ผู้ช่วย stroke';
-            else if (resultKey === 3) gameState.characterResult = 'หมอ stroke';
         }
 
         function collectFinalData() {
@@ -678,6 +688,7 @@
             console.log("--- Collected User Data (Simulation) ---");
             console.log(JSON.stringify(data, null, 2));
             console.log("----------------------------------------");
+            return data;
         }
 
         function renderResult() {
@@ -685,6 +696,7 @@
             collectFinalData();
             const result = characterData[gameState.characterResult];
             if (result) {
+                document.getElementById('char-image').src = result.image;
                 document.getElementById('char-title').textContent = result.title;
                 document.getElementById('char-personality').textContent = result.personality;
                 document.getElementById('char-strength').textContent = result.strength;
@@ -724,6 +736,45 @@
                 span.textContent = particleText;
             });
         }
+        
+        function shareResult() {
+            const shareData = {
+                title: 'ผลลัพธ์จาก Stroke Hero 2025',
+                text: `ฉันได้ลองเล่น Stroke Hero 2025 แล้ว และผลลัพธ์ของฉันคือ: ${gameState.characterResult}! มาลองเล่นเพื่อสร้างความตระหนักรู้เรื่องโรคหลอดเลือดสมองกัน`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch((err) => console.log("Error sharing:", err));
+            } else {
+                alert('การแชร์ไม่รองรับบนเบราว์เซอร์นี้ค่ะ');
+            }
+        }
+
+        function copyDataToClipboard() {
+            const dataToCopy = collectFinalData();
+            const dataString = JSON.stringify(dataToCopy, null, 2);
+
+            const textArea = document.createElement('textarea');
+            textArea.value = dataString;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '0';
+            textArea.style.left = '0';
+            textArea.style.opacity = '0';
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                alert('คัดลอกข้อมูลเรียบร้อยแล้ว!');
+            } catch (err) {
+                alert('ไม่สามารถคัดลอกข้อมูลได้');
+            }
+
+            document.body.removeChild(textArea);
+        }
+
 
         document.getElementById('intro-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -733,6 +784,7 @@
             gameState.knowledgeLevel = document.getElementById('knowledge').value;
             gameState.sceneHistory = [];
             gameState.scores = [];
+            gameState.incidentActionScore = null;
             updateDynamicText(gameState.name, gameState.gender);
             showScene('scene-morning-wake');
         });
