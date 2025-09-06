@@ -152,7 +152,7 @@
             <div class="bg-white p-8 rounded-2xl shadow-lg relative">
                  <button onclick="goBack()" class="absolute top-4 left-4 bg-stone-200 text-stone-600 px-3 py-1 rounded-full text-sm hover:bg-stone-300 transition-colors">&larr; ย้อนกลับ</button>
                 <p class="text-lg text-stone-600 mb-4 pt-8"><span class="player-name">คุณ</span>เดินตรงไปยังตู้เย็น... ทำอะไรกินดีล่ะเนี่ย</p>
-                <h2 class="text-2xl font-bold mb-6">"ได้เวลาเชฟตัวจริงงงง!"</h2>
+                <h2 class="text-2xl font-bold mb-6">"ได้เวลาเชฟตัวจริง!"</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button onclick="recordChoice(3); showScene('scene-plan-trip');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">American breakfast</h3>
@@ -287,19 +287,19 @@
                 <p class="text-lg text-stone-600 mb-6 pt-8">แคชเชียร์หน้าเบี้ยว แล้วล้มพับลงไป! ผู้คนต่างตกใจกับเหตุการณ์ที่เกิดขึ้นตรงหน้า และได้เข้ามารุมล้อมที่แคชเชียร์คนนั้น</p>
                 <h2 class="text-2xl font-bold mb-6"><span class="player-name">คุณ</span>จะทำอย่างไรกับเหตุการณ์นี้?</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button onclick="recordChoice(2, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(2, 'manager'); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">ตะโกนเรียกผู้จัดการร้าน</h3>
                     </button>
-                    <button onclick="recordChoice(3, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(3, 'call_1669'); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">โทรสายด่วน 1669</h3>
                     </button>
-                    <button onclick="recordChoice(0, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(0, 'panic'); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">ตกใจ ทำอะไรไม่ถูก</h3>
                     </button>
-                    <button onclick="recordChoice(0, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                    <button onclick="recordChoice(0, 'record_video'); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">หยิบโทรศัพท์มาถ่ายคลิป</h3>
                     </button>
-                     <button onclick="recordChoice(1, true); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
+                     <button onclick="recordChoice(1, 'yadom'); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">หายาดมมาให้เพราะคิดว่าเป็นลม</h3>
                     </button>
                 </div>
@@ -444,7 +444,7 @@
                  <h2 class="text-3xl font-bold mb-2">ผลลัพธ์ของ<span class="player-name">คุณ</span></h2>
                  <p class="text-stone-600 mb-6">จากการตัดสินใจของ<span class="player-name">คุณ</span>ในเรื่องราวที่ผ่านมา นี่คือบทบาทของ<span class="player-name">คุณ</span>:</p>
                  <div class="bg-teal-50 p-6 rounded-lg border-2 border-teal-200 text-left">
-                     <img id="char-image" src="" alt="Character Image" class="w-32 h-32 mx-auto rounded-full mb-4">
+                     <img id="char-image" src="" alt="Character Image" class="w-32 h-32 mx-auto rounded-full mb-4 object-cover">
                      <h3 id="char-title" class="text-2xl font-bold text-teal-700 text-center"></h3>
                      <p id="char-personality" class="mt-2 text-stone-700"></p>
                      <div class="mt-4">
@@ -460,10 +460,8 @@
                     <button onclick="shareResult()" class="choice-btn w-full sm:w-auto bg-blue-500 text-white font-bold py-3 px-8 rounded-full text-lg">
                         แชร์ผลลัพธ์
                     </button>
-                    <button onclick="copyDataToClipboard()" class="choice-btn w-full sm:w-auto bg-stone-500 text-white font-bold py-3 px-8 rounded-full text-lg">
-                        คัดลอกข้อมูล
-                    </button>
                 </div>
+                 <p class="mt-8 text-lg text-teal-600 font-semibold">ขอบคุณที่ร่วมเดินทางไปกับเรา ขอให้เป็นวันที่ดี<span class="polite-particle">ค่ะ</span></p>
                  <div class="mt-8 border-t pt-6 text-sm text-stone-500">
                     <h4 class="font-bold text-base text-stone-700 mb-2">จัดทำโดย</h4>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 mb-6 text-left">
@@ -493,7 +491,7 @@
             transport: '',
             finalQuestionResponse: '',
             scores: [],
-            incidentActionScore: null,
+            incidentActionIdentifier: null,
             characterResult: '',
             sceneHistory: [],
         };
@@ -575,7 +573,7 @@
             if (lastChoiceScene) {
                 gameState.scores.pop();
                  if (currentScene === 'scene-aftermath') {
-                    gameState.incidentActionScore = null;
+                    gameState.incidentActionIdentifier = null;
                 }
             }
 
@@ -647,33 +645,32 @@
             showNextText();
         }
 
-        function recordChoice(score, isIncident = false) {
+        function recordChoice(score, incidentIdentifier = null) {
             gameState.scores.push(score);
-            if (isIncident) {
-                gameState.incidentActionScore = score;
+            if (incidentIdentifier) {
+                gameState.incidentActionIdentifier = incidentIdentifier;
             }
         }
 
         function calculateResult() {
             const totalScore = gameState.scores.reduce((sum, score) => sum + score, 0);
-            const incidentAction = gameState.incidentActionScore;
+            const incidentAction = gameState.incidentActionIdentifier;
             
-            // New Logic
-            if (totalScore >= 15 && (incidentAction === 3 || incidentAction === 2)) {
+            if (totalScore >= 15 && (incidentAction === 'call_1669' || incidentAction === 'manager')) {
                 gameState.characterResult = 'หมอ stroke';
-            } else if (totalScore > 5 && totalScore < 12 && incidentAction === 0) {
-                 // Check if the specific action was taking a video (score 0). We need to distinguish between the two score 0 options.
-                 // A better way would be to pass a unique identifier. For now, this logic is tricky. Let's assume the user means the 'record video' option specifically.
-                 // Since there are two incident actions with score 0, I'll make the social addict one specific to the "หยิบโทรศัพท์มาถ่ายคลิป" choice which has the same score as panic. This can't be distinguished by score alone.
-                 // The prompt is slightly ambiguous. I'll make a simplifying assumption: if the incident action score is 0, and the total score is in range, it's social addict.
-                 gameState.characterResult = 'คนติดโซเชียล';
-            } else if (totalScore > 5 && totalScore < 15 && (incidentAction === 3 || incidentAction === 2 || incidentAction === 1)) {
+            } else if (totalScore > 5 && totalScore < 12 && incidentAction === 'record_video') {
+                gameState.characterResult = 'คนติดโซเชียล';
+            } else if (totalScore > 5 && totalScore < 15 && (incidentAction === 'call_1669' || incidentAction === 'manager' || incidentAction === 'yadom')) {
                 gameState.characterResult = 'ผู้ช่วย stroke';
             } else if (totalScore <= 5) {
                 gameState.characterResult = 'คนเป็น stroke';
             } else {
-                // Fallback character if none of the specific conditions are met
-                gameState.characterResult = 'ผู้ช่วย stroke';
+                // Fallback for edge cases
+                if (incidentAction === 'panic' || incidentAction === 'record_video') {
+                    gameState.characterResult = 'คนเป็น stroke';
+                } else {
+                    gameState.characterResult = 'ผู้ช่วย stroke';
+                }
             }
         }
 
@@ -685,7 +682,7 @@
                 finalCharacter: gameState.characterResult
             };
             
-            console.log("--- Collected User Data (Simulation) ---");
+            console.log("--- Collected User Data (For GitHub) ---");
             console.log(JSON.stringify(data, null, 2));
             console.log("----------------------------------------");
             return data;
@@ -750,32 +747,6 @@
             }
         }
 
-        function copyDataToClipboard() {
-            const dataToCopy = collectFinalData();
-            const dataString = JSON.stringify(dataToCopy, null, 2);
-
-            const textArea = document.createElement('textarea');
-            textArea.value = dataString;
-            textArea.style.position = 'fixed';
-            textArea.style.top = '0';
-            textArea.style.left = '0';
-            textArea.style.opacity = '0';
-
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-
-            try {
-                document.execCommand('copy');
-                alert('คัดลอกข้อมูลเรียบร้อยแล้ว!');
-            } catch (err) {
-                alert('ไม่สามารถคัดลอกข้อมูลได้');
-            }
-
-            document.body.removeChild(textArea);
-        }
-
-
         document.getElementById('intro-form').addEventListener('submit', function(e) {
             e.preventDefault();
             gameState.name = document.getElementById('name').value;
@@ -784,7 +755,7 @@
             gameState.knowledgeLevel = document.getElementById('knowledge').value;
             gameState.sceneHistory = [];
             gameState.scores = [];
-            gameState.incidentActionScore = null;
+            gameState.incidentActionIdentifier = null;
             updateDynamicText(gameState.name, gameState.gender);
             showScene('scene-morning-wake');
         });
@@ -810,5 +781,4 @@
     </script>
 </body>
 </html>
-
 
