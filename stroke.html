@@ -4,16 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เรื่องราวในหนึ่งวันของคุณ | Stroke Awareness 2025</title>
-    <!-- Chosen Palette: Warm Neutrals (Beige, Soft Tan, Muted Teal) -->
-    <!-- Application Structure Plan: A deeply narrative, linear SPA that personalizes the story using the user's name and age. The structure is built around "scenes" representing different points in time. The core interactive loop involves choices that accumulate points, leading to a character-based outcome. A significant 5-year time skip is implemented to demonstrate the long-term relevance of stroke awareness. This structure was chosen to maximize user immersion and emotional connection, making the final educational message more impactful by framing it within a personal journey. A back button functionality has been added using a scene history array to allow users to revisit previous choices. -->
-    <!-- Visualization & Content Choices: 
-        - Personalized Narrative: User inputs (name, age, gender) are integrated into the text to create a personalized story. (JS, HTML).
-        - Choice-based Scoring: Buttons for choices now carry a numeric score, which is collected in an array to determine the final outcome. This gamifies the experience slightly and provides a basis for the final personality-style result. (JS).
-        - Text Inputs: Free-form text inputs are used for non-critical story elements (destination, transport) to enhance the feeling of agency. (JS, HTML).
-        - Image Placeholders: Simple, clear images are used to represent patients of different ages, reinforcing the message that stroke can affect anyone.
-        - Character Reveal: The final result is presented as a "character card," which is a more engaging format than a simple text summary. (HTML, Tailwind CSS, JS).
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,6 +55,13 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .reflection-text {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .reflection-text.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800">
@@ -74,6 +72,9 @@
         <p class="time-skip-text">—(แต่<span class="player-name">คุณ</span>ก็ยังไม่สามารถลืมมันได้)—</p>
         <p class="time-skip-text" id="time-skip-age">—(เมื่อเวลาผ่านไป5ปี<span class="player-name">คุณ</span>อายุ..)--</p>
     </div>
+    
+    <div id="fade-to-black-overlay" class="fixed inset-0 bg-black opacity-0 transition-opacity duration-[1500ms] pointer-events-none z-50"></div>
+
 
     <main id="app-container" class="min-h-screen flex flex-col items-center justify-center p-4">
 
@@ -290,7 +291,7 @@
                     <button onclick="recordChoice(2); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">ตะโกนเรียกผู้จัดการร้าน</h3>
                     </button>
-                    <button onclick="recordChoice(3); showScene('scene-aftermath');" class="choice-btn bg-green-500 text-white p-4 rounded-lg text-left">
+                    <button onclick="recordChoice(3); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
                         <h3 class="font-semibold">โทรสายด่วน 1669</h3>
                     </button>
                     <button onclick="recordChoice(0); showScene('scene-aftermath');" class="choice-btn bg-white p-4 rounded-lg border-2 border-stone-200 text-left">
@@ -332,20 +333,17 @@
             <div class="bg-white p-8 rounded-2xl shadow-lg relative">
                  <button onclick="goBack()" class="absolute top-4 left-4 bg-stone-200 text-stone-600 px-3 py-1 rounded-full text-sm hover:bg-stone-300 transition-colors">&larr; ย้อนกลับ</button>
                 <p class="text-lg text-stone-600 mb-6 pt-8">ในวันหนึ่ง<span class="player-name">คุณ</span>ได้นัดกับเพื่อนไปห้างสรรพสินค้าใกล้บ้าน <span class="player-name">คุณ</span>รอรถนานเท่าไหร่ก็ไม่มีวี่แววจะมา <span class="player-name">คุณ</span>จึงเลือกโบกแท็กซี่ไป</p>
-                <button onclick="showScene('scene-user-stroke')" class="mt-6 choice-btn bg-stone-200 text-stone-700 font-bold py-2 px-8 rounded-full">
+                <button onclick="triggerUserStrokeSequence()" class="mt-6 choice-btn bg-stone-200 text-stone-700 font-bold py-2 px-8 rounded-full">
                     ขึ้นแท็กซี่
                 </button>
             </div>
         </section>
 
         <section id="scene-user-stroke" class="scene w-full max-w-xl text-center hidden">
-            <div class="bg-white p-8 rounded-2xl shadow-lg relative">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
                 <p id="user-stroke-dialogue" class="text-lg text-stone-600 mb-4"></p>
                 <p class="text-lg text-stone-600 mb-6">ลุงคนขับ: "ห๊ะ!? พูดไรไม่รู้เรื่องเลยหนู"</p>
-                <p class="text-xl font-bold text-red-600">ตาของ<span class="player-name">คุณ</span>เริ่มพร่ามัว... ครึ่งนึงของภาพทั้งหมดเบลอไป...</p>
-                 <div class="mt-8 w-full h-40 bg-stone-800 flex items-center justify-center">
-                    <p class="text-white text-3xl font-bold">ภาพตัดไป</p>
-                 </div>
+                <p id="blurry-text" class="text-xl font-bold text-red-600 opacity-0 transition-opacity duration-[2000ms]">ตาของ<span class="player-name">คุณ</span>เริ่มพร่ามัว... ครึ่งนึงของภาพทั้งหมดเบลอไป...</p>
             </div>
         </section>
 
@@ -382,15 +380,11 @@
 
         <section id="scene-hospital-reflection" class="scene w-full max-w-2xl text-center hidden">
             <div class="bg-white p-8 rounded-2xl shadow-lg relative">
-                <button onclick="goBack()" class="absolute top-4 left-4 bg-stone-200 text-stone-600 px-3 py-1 rounded-full text-sm hover:bg-stone-300 transition-colors">&larr; ย้อนกลับ</button>
-                <div class="space-y-4 text-xl text-stone-700 pt-8">
-                    <p>"เหตุการณ์นี้ไม่ต่างจากแคชเชียร์ที่<span class="player-name">คุณ</span>เจอเมื่อ 5 ปีก่อน"</p>
-                    <p class="font-bold">"แต่กลับกัน เหตุการณ์นั้นกลับเกิดขึ้นกับ<span class="player-name">คุณ</span>เอง"</p>
-                    <p>"เรื่องเล็กน้อยที่<span class="player-name">คุณ</span>มองว่าไกลตัว"</p>
-                    <p class="font-bold">"จริงๆแล้วมันอาจจะใกล้กว่าที่<span class="player-name">คุณ</span>คิด"</p>
-                    <p>"จนคาดไม่ถึงเลยล่ะ"</p>
+                 <button onclick="goBack()" class="absolute top-4 left-4 bg-stone-200 text-stone-600 px-3 py-1 rounded-full text-sm hover:bg-stone-300 transition-colors">&larr; ย้อนกลับ</button>
+                <div class="space-y-4 text-xl text-stone-700 pt-8 min-h-[200px] flex items-center justify-center">
+                    <p id="reflection-text-container" class="reflection-text"></p>
                 </div>
-                 <button onclick="showScene('scene-age-images')" class="mt-8 choice-btn bg-stone-200 text-stone-700 font-bold py-2 px-8 rounded-full">
+                 <button id="reflection-continue-btn" onclick="showScene('scene-age-images')" class="mt-8 choice-btn bg-stone-200 text-stone-700 font-bold py-2 px-8 rounded-full hidden">
                     ...
                 </button>
             </div>
@@ -524,10 +518,12 @@
             }
         };
 
+        const scenesWithChoices = ['scene-morning-wake', 'scene-breakfast-choice', 'scene-lunch', 'scene-after-lunch', 'scene-afternoon-activity', 'scene-cashier-collapses'];
+
         let currentScene = 'scene-intro';
 
-        function showScene(sceneId) {
-            if (currentScene && currentScene !== 'scene-intro') {
+        function showScene(sceneId, isGoingBack = false) {
+            if (!isGoingBack && currentScene && currentScene !== 'scene-intro') {
                 gameState.sceneHistory.push(currentScene);
             }
 
@@ -537,21 +533,11 @@
             if (sceneId === 'scene-traveling') {
                 document.getElementById('traveling-text').textContent = `${gameState.name} กำลังเดินทางไปยัง ${gameState.destination} โดย ${gameState.transport}`;
             }
-            if (sceneId === 'scene-user-stroke') {
-                 let dialogue = '';
-                 switch (gameState.gender) {
-                    case 'male':
-                        dialogue = `${gameState.name}: "ลุงครับ ผมไป... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
-                        break;
-                    case 'female':
-                        dialogue = `${gameState.name}: "ลุงคะ หนูไป... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
-                        break;
-                    default:
-                        dialogue = `${gameState.name}: "ลุงคะ/ครับ ไปที่... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
-                 }
-                 document.getElementById('user-stroke-dialogue').innerHTML = dialogue;
-                 setTimeout(() => showScene('scene-hospital-intro'), 4000);
+            
+            if (sceneId === 'scene-hospital-reflection') {
+                startReflectionAnimation();
             }
+
             if (sceneId === 'scene-result') {
                 renderResult();
             }
@@ -569,16 +555,79 @@
             if (gameState.sceneHistory.length === 0) return;
             
             const previousSceneId = gameState.sceneHistory.pop();
-            const currentEl = document.getElementById(currentScene);
-            const previousEl = document.getElementById(previousSceneId);
+            const lastChoiceScene = scenesWithChoices.includes(currentScene);
 
-            if (currentEl) {
-                currentEl.classList.add('hidden');
+            if (lastChoiceScene) {
+                gameState.scores.pop();
             }
-            if (previousEl) {
-                previousEl.classList.remove('hidden');
-                currentScene = previousSceneId;
+
+            showScene(previousSceneId, true);
+        }
+
+        function triggerUserStrokeSequence() {
+            showScene('scene-user-stroke');
+            let dialogue = '';
+            switch (gameState.gender) {
+                case 'male':
+                    dialogue = `${gameState.name}: "ลุงครับ ผมไป... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
+                    break;
+                case 'female':
+                    dialogue = `${gameState.name}: "ลุงคะ หนูไป... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
+                    break;
+                default:
+                    dialogue = `${gameState.name}: "ลุงคะ/ครับ ไปที่... <span class="text-red-500 italic">*จู่ๆ ${gameState.name} ก็พูดไม่รู้เรื่องฟังไม่ได้ความ*</span>"`;
             }
+            document.getElementById('user-stroke-dialogue').innerHTML = dialogue;
+
+            setTimeout(() => {
+                document.getElementById('blurry-text').classList.remove('opacity-0');
+            }, 100);
+
+            setTimeout(() => {
+                document.getElementById('fade-to-black-overlay').classList.remove('opacity-0');
+            }, 2100); 
+
+            setTimeout(() => {
+                showScene('scene-hospital-intro');
+                // Reset overlays for replayability
+                 setTimeout(() => {
+                    document.getElementById('fade-to-black-overlay').classList.add('opacity-0');
+                    document.getElementById('blurry-text').classList.add('opacity-0');
+                }, 500);
+            }, 3600);
+        }
+
+        function startReflectionAnimation() {
+            const texts = [
+                `"เหตุการณ์นี้ไม่ต่างจากแคชเชียร์ที่<span class="player-name">${gameState.name}</span>เจอเมื่อ 5 ปีก่อน"`,
+                `"แต่กลับกัน เหตุการณ์นั้นกลับเกิดขึ้นกับ<span class="player-name">${gameState.name}</span>เอง"`,
+                `"เรื่องเล็กน้อยที่<span class="player-name">${gameState.name}</span>มองว่าไกลตัว"`,
+                `"จริงๆแล้วมันอาจจะใกล้กว่าที่<span class="player-name">${gameState.name}</span>คิด"`,
+                `"จนคาดไม่ถึงเลยล่ะ"`
+            ];
+            const textContainer = document.getElementById('reflection-text-container');
+            const continueBtn = document.getElementById('reflection-continue-btn');
+            continueBtn.classList.add('hidden');
+            let index = 0;
+
+            function showNextText() {
+                if (index >= texts.length) {
+                    continueBtn.classList.remove('hidden');
+                    return;
+                }
+                
+                textContainer.innerHTML = texts[index];
+                textContainer.classList.add('visible');
+
+                setTimeout(() => {
+                    textContainer.classList.remove('visible');
+                    setTimeout(() => {
+                        index++;
+                        showNextText();
+                    }, 1000); 
+                }, 2000); 
+            }
+            showNextText();
         }
 
         function recordChoice(score) {
@@ -623,8 +672,7 @@
                 age: gameState.age,
                 gender: gameState.gender,
                 knowledgeLevel: gameState.knowledgeLevel,
-                finalCharacter: gameState.characterResult,
-                timestamp: new Date().toISOString()
+                finalCharacter: gameState.characterResult
             };
             
             console.log("--- Collected User Data (Simulation) ---");
@@ -683,6 +731,8 @@
             gameState.age = parseInt(document.getElementById('age').value);
             gameState.gender = document.querySelector('input[name="gender"]:checked').value;
             gameState.knowledgeLevel = document.getElementById('knowledge').value;
+            gameState.sceneHistory = [];
+            gameState.scores = [];
             updateDynamicText(gameState.name, gameState.gender);
             showScene('scene-morning-wake');
         });
