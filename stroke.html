@@ -503,7 +503,7 @@
                 strength: 'มีความรู้สึกเห็นอกเห็นใจสูง',
                 weakness: 'ควบคุมอารมณ์ได้ยากในสถานการณ์กดดัน ทำให้ช่วยเหลือได้ล่าช้า',
                 summary: 'จิตใจดี แต่ต้องการการฝึกฝนการรับมือกับเหตุการณ์ไม่คาดคิด',
-                image: 'Strokingman.jpg'
+                image: '/Strokingman.jpg'
             },
             'คนติดโซเชียล': {
                 title: 'คนติดโซเชียล (The Observer)',
@@ -511,7 +511,7 @@
                 strength: 'สังเกตสิ่งรอบตัวได้ไว รู้จักเก็บข้อมูล',
                 weakness: 'ขาดการคิดถึงผลกระทบระยะสั้น อาจมองข้ามการช่วยเหลือฉุกเฉิน',
                 summary: 'เน้นบันทึกเหตุการณ์มากกว่าลงมือช่วยทันที',
-                image: 'Social-addict.jpg'
+                image: '/Social-addict.jpg'
             },
             'ผู้ช่วย stroke': {
                 title: 'ผู้ช่วย stroke (The Helper)',
@@ -519,7 +519,7 @@
                 strength: 'ไม่กลัวที่จะขอความช่วยเหลือจากคนอื่น สร้างการรับรู้ต่อสถานการณ์',
                 weakness: 'อาจไม่มีการจัดการขั้นตอนต่อไปเอง ต้องพึ่งคนอื่น',
                 summary: 'มีความรับผิดชอบ กล้าหาญ และพร้อมที่จะช่วยเหลือ',
-                image: 'Nurse.jpg'
+                image: '/Nurse.jpg'
             },
             'หมอ stroke': {
                 title: 'หมอ stroke (The Doctor)',
@@ -527,7 +527,7 @@
                 strength: 'รับมือกับสถานการณ์วิกฤติได้ดี ตัดสินใจเร็ว',
                 weakness: 'อาจกังวลกับความถูกต้องตามขั้นตอนมากจนลืมช่วยในด้านอื่น',
                 summary: 'มีความรับผิดชอบ รอบคอบ ใส่ใจผู้อื่น',
-                image: 'Doctor.jpg'
+                image: '/Doctor.jpg'
             }
         };
 
@@ -728,7 +728,7 @@
             });
 
             const politeParticles = document.querySelectorAll('.polite-particle');
-            const particleText = (playerGender === 'male') ? 'ครับ' : 'คะ';
+            const particleText = (playerGender === 'male') ? 'ครับ' : 'ค่ะ';
             politeParticles.forEach(span => {
                 span.textContent = particleText;
             });
@@ -781,4 +781,5 @@
     </script>
 </body>
 </html>
+
 
